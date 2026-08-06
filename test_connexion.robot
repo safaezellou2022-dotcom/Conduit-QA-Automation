@@ -2,30 +2,40 @@
 Library    SeleniumLibrary
 
 *** Variables ***
-# Navigation directe vers l'interface de connexion
-${URL}         https://realworld.app.is/
+${URL}          https://realworld.app.is/
 ${BROWSER}      chrome
-${EMAIL}        test_qa_maroc@gmail.com
-${PASSWORD}     MonMotDePasse123
+${EMAIL}        safaezellou2022@gmail.com
+${PASSWORD}     sofia140A
 
 *** Test Cases ***
-Vérifier L Affichage Des Erreurs De Connexion
-    [Documentation]    Test de connexion direct et robuste.
+Vérifier La Connexion Utilisateur Réussie
+    [Documentation]    Test de connexion nominal direct et robuste.
+    Ouvrir L Application Et Maximiser
+    Naviguer Vers La Page De Connexion
+    Saisir Les Identifiants De Connexion    ${EMAIL}    ${PASSWORD}
+    Soumettre Le Formulaire De Connexion
+    Vérifier Que L Utilisateur Est Connecté
+
+*** Keywords ***
+Ouvrir L Application Et Maximiser
     Open Browser    ${URL}    ${BROWSER}
     Maximize Browser Window
-    # 1. Cliquer sur le lien "Sign in" de la page d'accueil
+
+Naviguer Vers La Page De Connexion
+    # Utilisation du même localisateur CSS pour l'attente ET le clic
     Wait Until Element Is Visible    css:a[href="/login"]    timeout=10s
-    Click Element    xpath://a[text()='Sign in']
-    # 2. Saisir les données d'identification
-    Input Text        xpath://input[@type='email']       ${EMAIL}
-    Input Password    xpath://input[@type='password']    ${PASSWORD}
-    
-    # 3. Soumettre le formulaire
+    Click Element                    css:a[href="/login"]
+
+Saisir Les Identifiants De Connexion
+    [Arguments]    ${user_email}    ${user_password}
+    # Utilisation d'identifiants plus précis (comme la classe ou le placeholder si disponibles)
+    Wait Until Element Is Visible    css:input[type="email"]    timeout=5s
+    Input Text                       css:input[type="email"]    ${user_email}
+    Input Password                   css:input[type="password"]  ${user_password}
+
+Soumettre Le Formulaire De Connexion
     Click Button    css:button.btn-primary
 
-    # 4. L'assertion : Vérifier que le message d'erreur rouge est bien affiché
-    Wait Until Page Contains    Invalid email or password    timeout=10s
-    
-    [Teardown]    Close Browser
-
-
+Vérifier Que L Utilisateur Est Connecté
+    # Assertion essentielle : on attend de voir un élément propre au profil connecté
+    Wait Until Element Is Visible    css:a[href="/settings"]    timeout=10s
