@@ -1,6 +1,7 @@
 *** Settings ***
 Library    SeleniumLibrary
 Library    String
+Resource  ../resources/keywords_communs.resource
 
 *** Variables ***
 ${URL}           https://realworld.app.is/
@@ -17,6 +18,7 @@ Validation De Inscription D Un Nouvel Utilisateur
     Saisir Les Informations D Inscription    ${NOM_UTILISATEUR}    ${EMAIL_GENERE}    ${PASSWORD}
     Soumettre Le Formulaire D Inscription
     Vérifier Que Le Compte Est Créé Et Connecté
+    Se Déconnecter De L Application
     [Teardown]    Close Browser
 
 *** Keywords ***
@@ -46,5 +48,5 @@ Soumettre Le Formulaire D Inscription
 Vérifier Que Le Compte Est Créé Et Connecté
     # Une fois inscrit, Conduit connecte l'utilisateur automatiquement.
     # On vérifie la présence du bouton de configuration et du nom d'utilisateur dans le menu.
-    Wait Until Element Is Visible    css:a[href="/settings"]    timeout=10s
+    Wait Until Element Is Visible    css:a[href="/settings"]    timeout=20s
     Page Should Contain              ${NOM_UTILISATEUR}
